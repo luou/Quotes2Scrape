@@ -15,7 +15,7 @@ class ScrapyMiniProjectPipeline:
         self.create_table()
 
     def create_connection(self):
-        self.conn = sqlite3.connect('scrapy_mini_project/quotes.db')
+        self.conn = sqlite3.connect('quotes.db')
         self.curr = self.conn.cursor()
 
     def create_table(self):
