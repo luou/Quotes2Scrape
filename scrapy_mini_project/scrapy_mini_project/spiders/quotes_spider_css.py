@@ -1,4 +1,5 @@
 import scrapy
+from ..items import ScrapyMiniProjectItem
 
 
 class QuotesSpider(scrapy.Spider):
@@ -21,12 +22,17 @@ class QuotesSpider(scrapy.Spider):
         # with open(filename, 'wb') as f:
         #     f.write(response.body)
         # self.log('Saved file %s' % filename)
+
+        items = ScrapyMiniProjectItem()
+
         for quote in response.css('div.quote'):
-            yield {
-                'text': quote.css('span.text::text').get(),
-                'author': quote.css('small.author::text').get(),
-                'tags': quote.css('div.tags a.tag::text').getall(),
-            }
+
+            items['text'] = quote.css('span.text::text').get()
+            items['author'] = quote.css('small.author::text').get()
+            items['tags'] = quote.css('div.tags a.tag::text').getall()
+
+            yield items
+
         next_page = response.css('li.next a::attr(href)').get()
         if next_page is not None:
             yield response.follow(next_page, callback=self.parse)
